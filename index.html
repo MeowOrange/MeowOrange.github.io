@@ -1,20 +1,414 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>my-first-website</title>
-  <LINK href="styles.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrangeCrypt - Experimental Folder Encryption</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #ff6f00;
+            --secondary: #ffa040;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --warning: #ff9800;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--light);
+            background-image: linear-gradient(135deg, #fffaf0 0%, #f8f8f8 100%);
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .hero {
+            padding: 6rem 0 4rem;
+            background: linear-gradient(120deg, rgba(255,111,0,0.05) 0%, rgba(255,160,64,0.03) 100%);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-text {
+            font-size: 1.25rem;
+            color: #555;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(255,111,0,0.3);
+        }
+        
+        .cta-button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255,111,0,0.4);
+        }
+        
+        .warning-box {
+            background-color: rgba(255,152,0,0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 2rem auto;
+            max-width: 700px;
+        }
+        
+        .warning-box h3 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feature-description {
+            color: #666;
+        }
+        
+        .about-project {
+            padding: 5rem 0;
+            background-color: #f8f8f8;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .github-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0 30px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .github-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-<img src="https://octodex.github.com/images/daftpunktocat-thomas.gif" id="octocat" alt="octocat-gif" />
-
-<!-- Change this code here by copy and pasting your template on line 15 -->
-<p>Welcome to your first GitHub Pages website!</p>
-<p>https://github.com/MeowOrange/OrangeCrypt</p>
-<p>Windows Folder Encryption Demo</p>
-  
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="logo-text">OrangeCrypt</div>
+                </div>
+                <nav class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="https://github.com/MeowOrange/OrangeCrypt" target="_blank">GitHub</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="tagline">Experimental Project</div>
+                <h1>Windows Folder Encryption Tool</h1>
+                <p class="hero-text">
+                    OrangeCrypt is a conceptual encryption utility for Windows that demonstrates folder security techniques. 
+                    This project serves as an exploration of file encryption methods.
+                </p>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Important Notice</h3>
+                    <p>OrangeCrypt is an experimental project created for educational and demonstration purposes only. It is not intended for real-world security applications. Do not use this tool to protect sensitive data.</p>
+                </div>
+                
+                <a href="https://github.com/MeowOrange/OrangeCrypt" class="cta-button" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Project Highlights</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title">AES Encryption</h3>
+                    <p class="feature-description">Demonstrates implementation of industry-standard encryption algorithms for folder security.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-window-restore"></i>
+                    </div>
+                    <h3 class="feature-title">Windows Integration</h3>
+                    <p class="feature-description">Designed as a Windows utility with focus on native OS integration.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Open Source</h3>
+                    <p class="feature-description">Full source code available for educational purposes and peer review.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="about-project" id="about">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="section-title">About This Project</h2>
+                <p>
+                    OrangeCrypt was developed as an experimental project to explore Windows file system security techniques. 
+                    It demonstrates how folder encryption can be implemented at the application level.
+                </p>
+                <p>
+                    This project serves as a learning resource for developers interested in security implementations 
+                    and Windows application development. It is not intended as production-ready software.
+                </p>
+                <p>
+                    The source code is available on GitHub for educational examination and research purposes. 
+                    Contributions and feedback from the developer community are welcome.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="logo-text" style="color: white;">OrangeCrypt</div>
+                </div>
+                
+                <div class="github-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">Experimental</div>
+                        <div class="stat-label">Project Status</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">Conceptual</div>
+                        <div class="stat-label">Implementation</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">Educational</div>
+                        <div class="stat-label">Purpose</div>
+                    </div>
+                </div>
+                
+                <a href="https://github.com/MeowOrange/OrangeCrypt" class="cta-button" target="_blank" style="background-color: #333; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-github"></i> Explore Source Code
+                </a>
+                
+                <div class="copyright">
+                    &copy; 2023 OrangeCrypt Experimental Project. Not for production use.
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
